@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#8B1A1A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ACFD Protocols">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="manifest" href='data:application/manifest+json;utf8,{"name":"ACFD EMS Protocols","short_name":"ACFD","start_url":".","display":"standalone","background_color":"%238B1A1A","theme_color":"%238B1A1A","orientation":"portrait","icons":[{"src":"data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 rx=%2290%22 fill=%22%238B1A1A%22/><rect x=%22128%22 y=%22200%22 width=%22256%22 height=%22112%22 rx=%2210%22 fill=%22%23F4C430%22/><text x=%22256%22 y=%22284%22 font-size=%2280%22 font-weight=%22900%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 fill=%22%236B1414%22>ACFD</text></svg>","sizes":"512x512","type":"image/svg+xml"}]}'>
+<link rel="apple-touch-icon" href='data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><rect width=%22512%22 height=%22512%22 rx=%2290%22 fill=%22%238B1A1A%22/><rect x=%22128%22 y=%22200%22 width=%22256%22 height=%22112%22 rx=%2210%22 fill=%22%23F4C430%22/><text x=%22256%22 y=%22284%22 font-size=%2280%22 font-weight=%22900%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 fill=%22%236B1414%22>ACFD</text></svg>'>
+<title>ACFD EMS Protocols</title>
+<style>
+  :root {
+    --red: #8B1A1A;
+    --red-dark: #6B1414;
+    --red-light: #A82828;
+    --ink: #14181F;
+    --ink-2: #2A2F3A;
+    --muted: #6B7280;
+    --line: #E5E7EB;
+    --bg: #F7F8FA;
+    --card: #FFFFFF;
+    --yellow: #F4C430;
+    --green: #047857;
+    --blue: #1E40AF;
+    --safe-top: env(safe-area-inset-top);
+    --safe-bot: env(safe-area-inset-bottom);
+  }
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    margin: 0; padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior-y: contain;
+  }
+  body { padding-bottom: var(--safe-bot); }
+
+  .header {
+    background: linear-gradient(180deg, var(--red) 0%, var(--red-dark) 100%);
+    color: white;
+    padding: calc(14px + var(--safe-top)) 16px 14px;
+    position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .header-row { display: flex; align-items: center; gap: 12px; }
+  .badge {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--yellow);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; color: var(--red-dark);
+    font-size: 13px; letter-spacing: -0.5px;
+    flex-shrink: 0;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.15);
+  }
+  .header-title { font-size: 17px; font-weight: 700; letter-spacing: -0.3px; line-height: 1.1; }
+  .header-sub { font-size: 11px; opacity: 0.8; text-transform: uppercase; letter-spacing: 1.2px; margin-top: 2px; }
+  .header-info {
+    margin-left: auto;
+    background: rgba(255,255,255,0.15);
+    border: none;
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 16px; font-weight: 700;
+    cursor: pointer;
+    font-style: italic;
+    font-family: Georgia, serif;
+  }
+
+  .search-wrap { padding: 12px 16px; background: var(--card); border-bottom: 1px solid var(--line); }
+  .search {
+    width: 100%;
+    padding: 12px 14px 12px 40px;
+    border: 1.5px solid var(--line);
+    border-radius: 10px;
+    font-size: 16px;
+    background: var(--bg) url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='8'/><path d='m21 21-4.3-4.3'/></svg>") no-repeat 12px center;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+  .search:focus { border-color: var(--red); background-color: white; }
+
+  .quick {
+    display: flex; gap: 8px; padding: 12px 16px;
+    overflow-x: auto; background: var(--card);
+    border-bottom: 1px solid var(--line);
+    scrollbar-width: none;
+  }
+  .quick::-webkit-scrollbar { display: none; }
+  .chip {
+    flex-shrink: 0;
+    padding: 8px 14px;
+    border: 1.5px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px; font-weight: 600;
+    background: white; color: var(--ink-2);
+    cursor: pointer;
+  }
+  .chip.active { background: var(--ink); color: white; border-color: var(--ink); }
+
+  .star {
+    background: none; border: none;
+    font-size: 18px; padding: 4px;
+    cursor: pointer;
+    color: #D1D5DB;
+    flex-shrink: 0;
+  }
+  .star.active { color: var(--yellow); }
+
+  .content { padding: 8px 0 40px; }
+  .folder { margin-top: 8px; }
+  .folder-head {
+    padding: 14px 16px 8px;
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.5px;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .folder-head::before {
+    content: ""; width: 12px; height: 2px; background: var(--red); border-radius: 2px;
+  }
+  .list { background: var(--card); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.1s;
+    min-height: 56px;
+  }
+  .item:last-child { border-bottom: none; }
+  .item:active { background: #F0F2F6; }
+  .item-icon {
+    width: 32px; height: 32px; border-radius: 7px;
+    background: #FFF4E6; color: #B45309;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    font-size: 14px; font-weight: 700;
+  }
+  .item.cat-policies .item-icon { background: #EEF2FF; color: #3730A3; }
+  .item.cat-procedures .item-icon { background: #ECFDF5; color: #047857; }
+  .item.cat-medications .item-icon { background: #FEF2F2; color: #991B1B; }
+  .item.cat-cardiac .item-icon { background: #FEE2E2; color: #7F1D1D; }
+  .item.cat-trauma .item-icon { background: #FEF3C7; color: #92400E; }
+  .item.cat-pediatric .item-icon { background: #E0F2FE; color: #075985; }
+  .item-title { font-size: 15px; font-weight: 500; color: var(--ink); line-height: 1.3; flex: 1; }
+  .item-chev { color: var(--muted); flex-shrink: 0; }
+  .item mark { background: var(--yellow); color: var(--ink); padding: 0 2px; border-radius: 2px; }
+
+  .empty { padding: 40px 20px; text-align: center; color: var(--muted); font-size: 14px; }
+
+  .modal {
+    position: fixed; inset: 0;
+    background: rgba(20, 24, 31, 0.4);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 100;
+    display: none;
+  }
+  .modal.open { display: block; animation: fadeIn 0.2s ease-out; }
+  .sheet {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    background: var(--card);
+    border-radius: 20px 20px 0 0;
+    max-height: 92vh;
+    display: flex; flex-direction: column;
+    animation: slideUp 0.28s cubic-bezier(0.2, 0.9, 0.3, 1);
+    padding-bottom: var(--safe-bot);
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+  .sheet-handle {
+    width: 40px; height: 4px; background: #D1D5DB; border-radius: 2px;
+    margin: 8px auto 0;
+  }
+  .sheet-head {
+    padding: 12px 16px 14px;
+    display: flex; align-items: flex-start; gap: 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  .sheet-title {
+    flex: 1;
+    font-size: 17px; font-weight: 700; letter-spacing: -0.3px;
+    color: var(--ink); line-height: 1.25;
+  }
+  .sheet-close {
+    width: 32px; height: 32px; border-radius: 50%;
+    border: none; background: var(--bg); color: var(--ink-2);
+    font-size: 18px; cursor: pointer; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .sheet-body {
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    padding: 16px 18px 32px;
+    flex: 1;
+  }
+  .sheet-body h3 {
+    font-size: 11px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--red);
+    margin: 22px 0 8px; padding-bottom: 6px;
+    border-bottom: 2px solid var(--red);
+  }
+  .sheet-body h3:first-child { margin-top: 0; }
+  .sheet-body p { font-size: 15px; line-height: 1.55; color: var(--ink-2); margin: 0 0 12px; }
+  .sheet-body ul, .sheet-body ol { font-size: 15px; line-height: 1.55; color: var(--ink-2); padding-left: 22px; margin: 0 0 12px; }
+  .sheet-body li { margin-bottom: 6px; }
+  .sheet-body li ul { margin-top: 6px; }
+  .sheet-body strong { color: var(--ink); }
+  .sheet-body table {
+    width: 100%; border-collapse: collapse; margin: 10px 0 16px;
+    font-size: 14px;
+  }
+  .sheet-body th, .sheet-body td {
+    padding: 8px 10px; border: 1px solid var(--line); text-align: left;
+  }
+  .sheet-body th { background: #F3F4F6; font-weight: 700; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--ink-2); }
+  .callout {
+    background: #FFF8E1; border-left: 4px solid var(--yellow);
+    padding: 10px 14px; border-radius: 0 8px 8px 0;
+    font-size: 14px; margin: 14px 0; line-height: 1.5;
+  }
+  .callout-danger { background: #FEF2F2; border-left-color: var(--red); color: #7F1D1D; }
+  .callout-info { background: #EFF6FF; border-left-color: var(--blue); color: #1E3A8A; }
+  .callout-success { background: #F0FDF4; border-left-color: var(--green); color: #14532D; }
+  .dose-box {
+    background: #FEF2F2; border: 2px solid #FCA5A5;
+    border-radius: 10px; padding: 12px 14px;
+    margin: 10px 0;
+  }
+  .dose-box .dose-label {
+    font-size: 10px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.5px; color: var(--red);
+  }
+  .dose-box .dose-value {
+    font-size: 18px; font-weight: 700; color: var(--ink);
+    margin-top: 3px;
+    font-family: "SF Mono", Menlo, monospace;
+  }
+  .placeholder-note {
+    margin-top: 28px; padding: 10px; background: #F3F4F6;
+    border-radius: 8px; font-size: 11px; color: var(--muted);
+    text-align: center; font-style: italic;
+  }
+
+  .welcome {
+    position: fixed; inset: 0;
+    background: rgba(20, 24, 31, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 200;
+    display: none;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .welcome.open { display: flex; animation: fadeIn 0.25s ease-out; }
+  .welcome-card {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    width: 100%;
+    max-width: 500px;
+    padding: 24px 24px calc(24px + var(--safe-bot));
+    animation: slideUp 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .welcome-card h2 {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.5px;
+    margin: 0 0 6px;
+  }
+  .welcome-card p { font-size: 14px; line-height: 1.5; color: var(--ink-2); margin: 0 0 16px; }
+  .welcome-card .install-step {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 10px 0;
+  }
+  .welcome-card .step-num {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--red); color: white;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 800;
+    flex-shrink: 0;
+  }
+  .welcome-card .step-text { font-size: 14px; line-height: 1.45; color: var(--ink-2); }
+  .welcome-card .cta {
+    width: 100%;
+    margin-top: 16px;
+    padding: 14px;
+    background: var(--ink); color: white;
+    border: none; border-radius: 10px;
+    font-size: 15px; font-weight: 700;
+    cursor: pointer;
+  }
+  .welcome-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--yellow); color: var(--red-dark);
+    padding: 6px 12px; border-radius: 999px;
+    font-size: 11px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1.2px;
+    margin-bottom: 12px;
+  }
+
+  .offline-dot {
+    display: inline-block;
+    width: 8px; height: 8px; border-radius: 50%;
+    background: #10B981;
+    margin-right: 6px;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+  }
+  .offline-dot.offline { background: #F59E0B; }
+
+  .chev { width: 8px; height: 8px; border-right: 2px solid currentColor; border-bottom: 2px solid currentColor; transform: rotate(-45deg); display: inline-block; }
+
+  .disclaimer {
+    padding: 20px 24px;
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    line-height: 1.5;
+    border-top: 1px solid var(--line);
+    margin-top: 20px;
+    background: var(--card);
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-row">
+    <div class="badge">ACFD</div>
+    <div>
+      <div class="header-title">EMS Protocols</div>
+      <div class="header-sub"><span class="offline-dot" id="connDot"></span><span id="connText">Online</span> · v1.0</div>
+    </div>
+    <button class="header-info" onclick="showWelcome()" aria-label="Help">i</button>
+  </div>
+</header>
+
+<div class="search-wrap">
+  <input type="search" class="search" id="search" placeholder="Search protocols, meds, procedures…" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
+</div>
+
+<div class="quick" id="filters">
+  <div class="chip active" data-filter="all">All</div>
+  <div class="chip" data-filter="favorites">★ Favorites</div>
+  <div class="chip" data-filter="foundations">Foundations</div>
+  <div class="chip" data-filter="policies">Policies</div>
+  <div class="chip" data-filter="procedures">Procedures</div>
+  <div class="chip" data-filter="cardiac">Cardiac</div>
+  <div class="chip" data-filter="trauma">Trauma</div>
+  <div class="chip" data-filter="medications">Medications</div>
+  <div class="chip" data-filter="pediatric">Pediatric</div>
+</div>
+
+<main class="content" id="content"></main>
+
+<div class="disclaimer">
+  <strong>ACFD EMS Reference &middot; v1.0</strong><br>
+  Fake content for prototype demonstration only.<br>
+  Always follow current medical director orders and regional protocols.
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-head">
+      <div class="sheet-title" id="sheetTitle">Protocol</div>
+      <button class="star" id="sheetStar" onclick="toggleFav(event)" aria-label="Favorite">&#9733;</button>
+      <button class="sheet-close" onclick="closeModal()" aria-label="Close">&#10005;</button>
+    </div>
+    <div class="sheet-body" id="sheetBody"></div>
+  </div>
+</div>
+
+<div class="welcome" id="welcome" onclick="if(event.target===this)closeWelcome()">
+  <div class="welcome-card">
+    <div class="welcome-badge">Install Guide</div>
+    <h2>Save to your home screen</h2>
+    <p>Turn this into a real app icon on your phone. Works offline after the first open.</p>
+    <div id="installSteps"></div>
+    <button class="cta" onclick="closeWelcome()">Got it</button>
+  </div>
+</div>
+
+<script>
+  const DATA = {
+    foundations: {
+      label: "Foundations of Practice",
+      items: [
+        "Authorization for Use of ACFD Protocols",
+        "Consent to Medical Treatment",
+        "Deviation from Protocols",
+        "Patient Confidentiality (HIPAA)",
+        "Patient Definition",
+        "Protocol Review Process",
+        "Refusal of Service",
+        "Required Medical Care",
+        "Standard of Care",
+        "Triage Codes"
+      ]
+    },
+    policies: {
+      label: "Policies",
+      items: [
+        "Crime Scene Management",
+        "Do Not Resuscitate",
+        "Documentation of Patient Care",
+        "Emergency Driving and Vehicle Operations",
+        "Hazardous Material Incidents",
+        "Infectious Disease Exposure",
+        "Interfacility Transfers",
+        "Management of Firearms and Other Weapons",
+        "Medication Errors",
+        "MCI and Mutual Aid",
+        "Radio and Telephone Communications",
+        "Rescue / Extrication",
+        "Transportation and Destination"
+      ]
+    },
+    procedures: {
+      label: "Procedures",
+      items: [
+        "12-/15-Lead EKG Monitoring",
+        "4-Lead EKG Monitoring",
+        "Autopulse Application",
+        "Blood Glucose Monitoring",
+        "Cardioversion",
+        "Continued Sedation & Paralyzation",
+        "CPAP",
+        "Defibrillation",
+        "End-Tidal CO2 Monitoring",
+        "Intraosseous Access",
+        "IV Access",
+        "King Airway",
+        "Needle Decompression",
+        "Pulse Oximetry",
+        "Rapid Sequence Intubation",
+        "Splinting",
+        "Spinal Motion Restriction",
+        "Tourniquet Application"
+      ]
+    },
+    cardiac: {
+      label: "Cardiac Emergencies",
+      items: [
+        "Acute Coronary Syndrome / STEMI",
+        "Bradycardia (Symptomatic)",
+        "Cardiac Arrest — Adult",
+        "Cardiac Arrest — ROSC Care",
+        "Congestive Heart Failure / Pulmonary Edema",
+        "Narrow-Complex Tachycardia (SVT)",
+        "Wide-Complex Tachycardia (V-Tach)",
+        "Ventricular Fibrillation / Pulseless V-Tach"
+      ]
+    },
+    trauma: {
+      label: "Trauma",
+      items: [
+        "Burns — Thermal & Chemical",
+        "Crush Injury Syndrome",
+        "Head & Traumatic Brain Injury",
+        "Hemorrhage Control",
+        "Penetrating Trauma",
+        "Spinal Trauma",
+        "Trauma Triage Criteria"
+      ]
+    },
+    medications: {
+      label: "Medications",
+      items: [
+        "Adenosine",
+        "Albuterol",
+        "Amiodarone",
+        "Aspirin",
+        "Atropine",
+        "Dextrose 10% / 50%",
+        "Diphenhydramine",
+        "Epinephrine 1:1,000",
+        "Epinephrine 1:10,000",
+        "Fentanyl",
+        "Glucagon",
+        "Ketamine",
+        "Lidocaine",
+        "Midazolam (Versed)",
+        "Morphine Sulfate",
+        "Naloxone (Narcan)",
+        "Nitroglycerin",
+        "Ondansetron (Zofran)",
+        "Tranexamic Acid (TXA)"
+      ]
+    },
+    pediatric: {
+      label: "Pediatric",
+      items: [
+        "Pediatric Airway Management",
+        "Pediatric Assessment Triangle",
+        "Pediatric Cardiac Arrest",
+        "Pediatric Dosing Reference (Broselow)",
+        "Pediatric Respiratory Distress",
+        "Pediatric Seizures",
+        "Pediatric Trauma"
+      ]
+    }
+  };
+
+  const CAT_ICONS = {
+    foundations: "\u00A7",
+    policies: "\u00B6",
+    procedures: "+",
+    cardiac: "\u2665",
+    trauma: "\u25B3",
+    medications: "\u211E",
+    pediatric: "\u25C9"
+  };
+
+  const CONTENT = {
+    "Do Not Resuscitate": `
+      <h3>Policy</h3>
+      <p>Resuscitation efforts <strong>shall be initiated</strong> on all patients in cardiac or respiratory arrest UNLESS one of the following is met:</p>
+      <ul>
+        <li>A physician on scene issues a verbal DNR order and provides written directive</li>
+        <li>An authorized written DNR Directive per <strong>KSA 65-4943</strong> is produced</li>
+        <li>A valid DNR bracelet/identifier is present on the patient</li>
+        <li>Obvious signs of death: dependent lividity, rigor mortis, decapitation, decomposition, or injuries incompatible with life</li>
+      </ul>
+      <div class="callout callout-danger"><strong>&#9888; When in doubt — resuscitate.</strong> Family "No Code" requests alone are NOT a valid DNR.</div>
+      <h3>DNR Documentation Types</h3>
+      <p><strong>DNR Directive:</strong> Witnessed written document voluntarily executed by the patient, dated and signed by two witnesses.</p>
+      <p><strong>DNR Order:</strong> Physician instruction for a patient in a care facility. Valid during that facility stay unless rescinded.</p>
+      <p><strong>DNR Identifier:</strong> Kansas-branded bracelet inscribed with "DNR" or "Do Not Resuscitate."</p>
+      <h3>Power of Attorney / Living Will</h3>
+      <p>Kansas Medical POA per <strong>KSA 58-625</strong>. Living Wills governed by <strong>KSA 65-28,101</strong>. Both require two witnesses and physician confirmation of terminal condition where applicable.</p>
+      <h3>Field Termination</h3>
+      <p>Consult Medical Control prior to field termination unless obvious death criteria are met.</p>
+    `,
+
+    "12-/15-Lead EKG Monitoring": `
+      <h3>Indications</h3>
+      <p>Acquire 12-lead ECG on patients with signs/symptoms of ACS, atypical chest pain, arrhythmia, suspected CVA, or unexplained respiratory distress.</p>
+      <h3>Procedure — 12 Lead</h3>
+      <ul>
+        <li>Expose chest; ensure skin is clean and dry</li>
+        <li>Shave excess hair if necessary</li>
+        <li>Apply chest and extremity leads</li>
+        <li><strong>RA</strong> — Right Arm &middot; <strong>LA</strong> — Left Arm</li>
+        <li><strong>RL</strong> — Right Leg &middot; <strong>LL</strong> — Left Leg</li>
+        <li><strong>V1</strong> — 4th ICS, right sternal border</li>
+        <li><strong>V2</strong> — 4th ICS, left sternal border</li>
+        <li><strong>V3</strong> — Between V2 and V4</li>
+        <li><strong>V4</strong> — 5th ICS, mid-clavicular line</li>
+        <li><strong>V5</strong> — Level with V4, left anterior axillary line</li>
+        <li><strong>V6</strong> — Level with V5, left mid-axillary line</li>
+      </ul>
+      <h3>15-Lead Indications</h3>
+      <p>Acquire when patient has Inferior STEMI or suspected Posterior MI (ST depression in V1/V2).</p>
+      <div class="callout">Confirms Posterior MI (often associated with Inferior MI). Detects RVMI — a larger, more complicated Inferior MI.</div>
+      <h3>15-Lead Procedure</h3>
+      <ul>
+        <li>Run standard 12-lead first</li>
+        <li><strong>V4 &rarr; V4R:</strong> 5th ICS, RIGHT midclavicular line</li>
+        <li><strong>V5 &rarr; V8:</strong> 5th ICS, left midscapula</li>
+        <li><strong>V6 &rarr; V9:</strong> 5th ICS, just left of the spine</li>
+        <li>Re-label ECG as 15-lead before transmission</li>
+      </ul>
+      <h3>STEMI Alert Criteria</h3>
+      <ul>
+        <li>ST elevation ≥1 mm in two contiguous limb leads</li>
+        <li>ST elevation ≥2 mm in two contiguous precordial leads</li>
+        <li>New LBBB with clinical ACS presentation</li>
+      </ul>
+      <div class="callout callout-danger"><strong>Transmit immediately</strong> to receiving facility and activate STEMI Alert per destination protocol.</div>
+    `,
+
+    "Cardiac Arrest — Adult": `
+      <h3>Priority Actions</h3>
+      <ol>
+        <li>Confirm arrest &middot; Begin high-quality CPR</li>
+        <li>Apply defibrillator / AED &middot; Analyze rhythm</li>
+        <li>Establish airway — BVM with OPA, then advanced airway</li>
+        <li>IV/IO access — do not delay CPR for access</li>
+        <li>Identify and treat reversible causes (H's & T's)</li>
+      </ol>
+      <h3>Shockable Rhythms — VF / pVT</h3>
+      <ul>
+        <li>Defibrillate at manufacturer-recommended dose (typically 200J biphasic)</li>
+        <li>Resume CPR immediately &times; 2 minutes</li>
+        <li>Check rhythm / pulse after each cycle</li>
+      </ul>
+      <div class="dose-box">
+        <div class="dose-label">Epinephrine 1:10,000</div>
+        <div class="dose-value">1 mg IV/IO every 3–5 min</div>
+      </div>
+      <div class="dose-box">
+        <div class="dose-label">Amiodarone (Refractory VF/pVT)</div>
+        <div class="dose-value">300 mg IV/IO &middot; Repeat 150 mg &times; 1</div>
+      </div>
+      <h3>Non-Shockable Rhythms — Asystole / PEA</h3>
+      <ul>
+        <li>Continue CPR &middot; Epinephrine every 3–5 min</li>
+        <li>Aggressively investigate reversible causes</li>
+      </ul>
+      <h3>H's and T's</h3>
+      <table>
+        <tr><th>H's</th><th>T's</th></tr>
+        <tr><td>Hypovolemia</td><td>Tension pneumothorax</td></tr>
+        <tr><td>Hypoxia</td><td>Tamponade (cardiac)</td></tr>
+        <tr><td>Hydrogen ion (acidosis)</td><td>Toxins</td></tr>
+        <tr><td>Hypo/Hyperkalemia</td><td>Thrombosis (pulmonary)</td></tr>
+        <tr><td>Hypothermia</td><td>Thrombosis (coronary)</td></tr>
+      </table>
+      <div class="callout callout-success"><strong>Post-ROSC:</strong> See "Cardiac Arrest — ROSC Care" protocol.</div>
+    `,
+
+    "Epinephrine 1:10,000": `
+      <h3>Class</h3>
+      <p>Sympathomimetic &middot; Alpha & Beta agonist</p>
+      <h3>Indications</h3>
+      <ul>
+        <li>Cardiac arrest (VF, pVT, asystole, PEA)</li>
+        <li>Symptomatic bradycardia refractory to atropine</li>
+        <li>Profound hypotension from cardiogenic or septic shock (infusion)</li>
+      </ul>
+      <h3>Contraindications</h3>
+      <ul>
+        <li>None in cardiac arrest</li>
+        <li>Use caution with pre-existing ventricular irritability in non-arrest states</li>
+      </ul>
+      <h3>Adult Dose</h3>
+      <div class="dose-box">
+        <div class="dose-label">Cardiac Arrest</div>
+        <div class="dose-value">1 mg (10 mL of 1:10,000) IV/IO q 3–5 min</div>
+      </div>
+      <div class="dose-box">
+        <div class="dose-label">Push-Dose Pressor</div>
+        <div class="dose-value">10–20 mcg IV q 2–5 min PRN</div>
+      </div>
+      <h3>Pediatric Dose</h3>
+      <div class="dose-box">
+        <div class="dose-label">Cardiac Arrest</div>
+        <div class="dose-value">0.01 mg/kg (0.1 mL/kg of 1:10,000) IV/IO q 3–5 min</div>
+      </div>
+      <h3>Notes</h3>
+      <div class="callout callout-danger"><strong>&#9888; Concentration matters.</strong> 1:10,000 is for IV/IO use. 1:1,000 is for IM use (anaphylaxis). Administering the wrong concentration is a sentinel event.</div>
+    `,
+
+    "Naloxone (Narcan)": `
+      <h3>Class</h3>
+      <p>Opioid antagonist &middot; Pure competitive inhibitor at opioid receptors</p>
+      <h3>Indications</h3>
+      <ul>
+        <li>Suspected opioid overdose with respiratory depression</li>
+        <li>Altered mental status of unknown etiology (empiric trial)</li>
+      </ul>
+      <h3>Adult Dose</h3>
+      <div class="dose-box">
+        <div class="dose-label">IV/IO/IM</div>
+        <div class="dose-value">0.4–2 mg &middot; Repeat q 2–3 min up to 10 mg</div>
+      </div>
+      <div class="dose-box">
+        <div class="dose-label">Intranasal</div>
+        <div class="dose-value">2 mg per nostril (4 mg total)</div>
+      </div>
+      <h3>Pediatric Dose</h3>
+      <div class="dose-box">
+        <div class="dose-label">IV/IO/IM/IN</div>
+        <div class="dose-value">0.1 mg/kg (max 2 mg per dose)</div>
+      </div>
+      <h3>Goal of Therapy</h3>
+      <div class="callout callout-info"><strong>Titrate to respiratory effort, not full consciousness.</strong> Full reversal may precipitate violent withdrawal, vomiting, and aspiration risk. Support ventilation with BVM first.</div>
+      <h3>Cautions</h3>
+      <ul>
+        <li>Half-life shorter than most opioids — re-sedation possible</li>
+        <li>All patients should be transported even if they refuse</li>
+        <li>Fentanyl & analogs may require repeat dosing</li>
+      </ul>
+    `,
+
+    "Acute Coronary Syndrome / STEMI": `
+      <h3>Assessment</h3>
+      <ul>
+        <li>OPQRST chest pain assessment</li>
+        <li>Obtain 12-lead ECG within 10 minutes of patient contact</li>
+        <li>Transmit ECG to receiving facility</li>
+        <li>Acquire 15-lead if Inferior STEMI or posterior involvement suspected</li>
+      </ul>
+      <h3>Treatment</h3>
+      <ol>
+        <li><strong>Oxygen</strong> — Titrate to SpO₂ ≥94% (avoid hyperoxia)</li>
+        <li><strong>Aspirin 324 mg</strong> chewed (4 &times; 81 mg) unless allergic or active bleed</li>
+        <li><strong>IV access</strong> &times; 2 large bore if time permits</li>
+        <li><strong>Nitroglycerin 0.4 mg SL</strong> q 5 min &times; 3 if SBP &gt;100</li>
+        <li><strong>Fentanyl</strong> for pain refractory to NTG — see dosing</li>
+      </ol>
+      <div class="callout callout-danger"><strong>&#9888; Withhold nitroglycerin if:</strong> SBP &lt;100, HR &lt;50 or &gt;100, Inferior MI with RV involvement, or PDE-5 inhibitor use within 24–48 hours (sildenafil, tadalafil).</div>
+      <h3>STEMI Alert</h3>
+      <ul>
+        <li>Activate STEMI Alert with receiving facility</li>
+        <li>Target door-to-balloon time: <strong>≤90 minutes</strong></li>
+        <li>Bypass closer non-PCI hospital if within 30-minute transport of PCI center</li>
+      </ul>
+      <h3>Destination</h3>
+      <p>Transport to nearest PCI-capable facility per Transportation and Destination policy.</p>
+    `,
+
+    "Authorization for Use of ACFD Protocols": `
+      <h3>Purpose</h3>
+      <p>These protocols define the scope of practice for ACFD EMS providers and are authorized by the department Medical Director in accordance with <strong>KSA 65-6112</strong>.</p>
+      <h3>Scope</h3>
+      <ul>
+        <li>Applies to all licensed EMS personnel operating under ACFD</li>
+        <li>Applicable during all 911 responses, transfers, and standby events</li>
+        <li>Standing orders authorized — no contact required unless specified</li>
+      </ul>
+      <h3>Provider Levels</h3>
+      <table>
+        <tr><th>Level</th><th>Scope</th></tr>
+        <tr><td>EMR</td><td>Basic assessment, BLS interventions</td></tr>
+        <tr><td>EMT</td><td>BLS + AED, CPAP, select medications</td></tr>
+        <tr><td>AEMT</td><td>EMT + IV access, limited ALS meds</td></tr>
+        <tr><td>Paramedic</td><td>Full ALS scope per Medical Director</td></tr>
+      </table>
+      <div class="callout callout-info">Providers shall operate only within their certified scope. Deviation requires on-line medical control.</div>
+      <h3>Review Cycle</h3>
+      <p>Protocols reviewed annually by Medical Director and EMS leadership. Interim updates issued as needed.</p>
+    `,
+
+    "Pediatric Dosing Reference (Broselow)": `
+      <h3>Use</h3>
+      <p>For pediatric patients, use length-based resuscitation tape (Broselow). If unavailable, estimate weight and apply weight-based dosing below.</p>
+      <h3>Weight Estimation</h3>
+      <p><strong>Age-based estimate (1–10 yr):</strong> Weight (kg) = (Age &times; 2) + 8</p>
+      <h3>Common Pediatric Doses</h3>
+      <table>
+        <tr><th>Medication</th><th>Dose</th></tr>
+        <tr><td>Epinephrine (arrest)</td><td>0.01 mg/kg IV/IO</td></tr>
+        <tr><td>Epinephrine (anaphylaxis)</td><td>0.01 mg/kg IM (max 0.3 mg)</td></tr>
+        <tr><td>Atropine</td><td>0.02 mg/kg IV/IO (min 0.1 mg)</td></tr>
+        <tr><td>Amiodarone</td><td>5 mg/kg IV/IO</td></tr>
+        <tr><td>Adenosine</td><td>0.1 mg/kg (max 6 mg), then 0.2 mg/kg</td></tr>
+        <tr><td>Naloxone</td><td>0.1 mg/kg IV/IO/IM/IN (max 2 mg)</td></tr>
+        <tr><td>Dextrose 10%</td><td>5 mL/kg IV/IO</td></tr>
+        <tr><td>Fentanyl</td><td>1–2 mcg/kg IV/IO/IN</td></tr>
+        <tr><td>Midazolam</td><td>0.1 mg/kg IV/IO/IM</td></tr>
+      </table>
+      <h3>Defibrillation</h3>
+      <div class="dose-box">
+        <div class="dose-label">Initial Shock</div>
+        <div class="dose-value">2 J/kg</div>
+      </div>
+      <div class="dose-box">
+        <div class="dose-label">Subsequent Shocks</div>
+        <div class="dose-value">4 J/kg (max 10 J/kg or adult dose)</div>
+      </div>
+      <h3>Cardioversion</h3>
+      <p>Synchronized: 0.5–1 J/kg initial, 2 J/kg subsequent</p>
+    `,
+
+    "Tourniquet Application": `
+      <h3>Indications</h3>
+      <ul>
+        <li>Life-threatening extremity hemorrhage not controlled by direct pressure</li>
+        <li>Amputation or near-amputation</li>
+        <li>Multiple casualties where direct pressure cannot be maintained</li>
+        <li>Hemorrhage in a tactical / unsafe environment</li>
+      </ul>
+      <h3>Procedure</h3>
+      <ol>
+        <li>Apply approved tourniquet (CAT, SOFT-T, SAM-XT) <strong>2–3 inches proximal</strong> to wound</li>
+        <li>Do <strong>NOT</strong> place over a joint</li>
+        <li>Tighten until distal pulse is eliminated and bleeding stops</li>
+        <li><strong>Mark time of application</strong> on tourniquet and patient</li>
+        <li>Do not remove once applied — notify receiving facility</li>
+      </ol>
+      <div class="callout callout-danger"><strong>&#9888; Never loosen a tourniquet in the field</strong> once bleeding is controlled. Loosening may release toxic metabolites and cause re-hemorrhage.</div>
+      <h3>Second Tourniquet</h3>
+      <p>If bleeding continues after first tourniquet is fully tightened, apply a <strong>second tourniquet proximal</strong> to the first (not distal).</p>
+      <h3>Junctional Bleeds</h3>
+      <p>For groin, axilla, or neck hemorrhage where a standard tourniquet cannot be applied, use wound packing with hemostatic gauze and direct pressure, or a junctional tourniquet if available.</p>
+      <h3>Documentation</h3>
+      <ul>
+        <li>Time of application</li>
+        <li>Location on extremity</li>
+        <li>Effectiveness (bleeding controlled Y/N)</li>
+        <li>Distal pulse status after application</li>
+      </ul>
+    `,
+
+    "Refusal of Service": `
+      <h3>Patient Criteria for Refusal</h3>
+      <p>A patient may refuse care or transport only if ALL of the following are met:</p>
+      <ul>
+        <li>Age ≥18 or emancipated minor</li>
+        <li>Alert & oriented &times; 4 (person, place, time, event)</li>
+        <li>No evidence of intoxication, head injury, or altered mentation</li>
+        <li>Able to verbalize understanding of risks including possible death</li>
+        <li>Not under legal hold (Mental Health, law enforcement custody)</li>
+      </ul>
+      <div class="callout callout-danger"><strong>&#9888; High-Risk Refusals</strong> — chest pain, suicidal ideation, significant MOI, pediatric patients, pregnancy — require <strong>on-line Medical Control contact</strong> before accepting refusal.</div>
+      <h3>Required Steps</h3>
+      <ol>
+        <li>Complete full patient assessment including vitals</li>
+        <li>Explain condition, recommended treatment, and risks</li>
+        <li>Offer alternative transport / follow-up options</li>
+        <li>Obtain signature on Refusal of Care form</li>
+        <li>Secure signature of witness (family, LEO, or partner)</li>
+        <li>Advise "call 911 if symptoms worsen or change"</li>
+      </ol>
+      <h3>Implied Consent</h3>
+      <p>If patient cannot meet all refusal criteria and has a condition that would require care, <strong>transport under implied consent</strong>. Involve law enforcement if restraint is required.</p>
+      <h3>Documentation Must Include</h3>
+      <ul>
+        <li>Full narrative of assessment findings</li>
+        <li>Capacity determination rationale</li>
+        <li>Risks explained and patient's verbal acknowledgment</li>
+        <li>Medical Control contact if applicable</li>
+      </ul>
+    `
+  };
+
+  function genericContent(title, categoryKey) {
+    const cat = DATA[categoryKey].label;
+    return `
+      <h3>Overview</h3>
+      <p>This is the <strong>${title}</strong> protocol (<em>${cat}</em>).</p>
+      <p>In the production version, this screen contains the complete protocol — indications, contraindications, procedure, dosing, and documentation requirements — cleanly formatted for phone screens.</p>
+      <h3>Typical Sections</h3>
+      <ul>
+        <li>Indications & Contraindications</li>
+        <li>Equipment / Preparation</li>
+        <li>Procedure (step-by-step)</li>
+        <li>Monitoring & Reassessment</li>
+        <li>Documentation Requirements</li>
+      </ul>
+      <div class="callout">This is fake placeholder content for prototype testing. Real protocols will replace this.</div>
+      <div class="placeholder-note">Placeholder &middot; ${cat}</div>
+    `;
+  }
+
+  let currentFilter = "all";
+  let currentQuery = "";
+  let currentTitle = null;
+  let favorites = new Set(JSON.parse(localStorage.getItem("acfd_favs") || "[]"));
+
+  function saveFavs() {
+    localStorage.setItem("acfd_favs", JSON.stringify([...favorites]));
+  }
+
+  function render() {
+    const content = document.getElementById("content");
+    const q = currentQuery.trim().toLowerCase();
+    let html = "";
+    let totalMatches = 0;
+
+    if (currentFilter === "favorites") {
+      const favList = [...favorites];
+      if (favList.length === 0) {
+        content.innerHTML = `<div class="empty">No favorites yet.<br>Tap the &#9733; on any protocol to save it here.</div>`;
+        return;
+      }
+      html += `<section class="folder">
+        <div class="folder-head">Favorites <span style="color:#D1D5DB;font-weight:600;">&middot; ${favList.length}</span></div>
+        <div class="list">`;
+      for (const title of favList) {
+        const cat = findCategory(title);
+        if (!cat) continue;
+        html += renderItem(title, cat, q);
+      }
+      html += `</div></section>`;
+      content.innerHTML = html;
+      return;
+    }
+
+    for (const key of Object.keys(DATA)) {
+      if (currentFilter !== "all" && currentFilter !== key) continue;
+      const cat = DATA[key];
+      const matches = cat.items.filter(it => !q || it.toLowerCase().includes(q));
+      if (matches.length === 0) continue;
+      totalMatches += matches.length;
+
+      html += `<section class="folder">
+        <div class="folder-head">${cat.label} <span style="color:#D1D5DB;font-weight:600;">&middot; ${matches.length}</span></div>
+        <div class="list">`;
+      for (const title of matches) {
+        html += renderItem(title, key, q);
+      }
+      html += `</div></section>`;
+    }
+
+    if (totalMatches === 0 && currentFilter !== "favorites") {
+      html = `<div class="empty">No protocols match "<strong>${escapeHtml(currentQuery)}</strong>"</div>`;
+    }
+
+    content.innerHTML = html;
+  }
+
+  function renderItem(title, categoryKey, query) {
+    const display = query ? title.replace(new RegExp("(" + escapeReg(query) + ")", "ig"), "<mark>$1</mark>") : title;
+    const isFav = favorites.has(title);
+    return `<div class="item cat-${categoryKey}" onclick="openProtocol('${encodeURIComponent(title)}','${categoryKey}')">
+      <div class="item-icon">${CAT_ICONS[categoryKey]}</div>
+      <div class="item-title">${display}</div>
+      ${isFav ? '<span class="star active" style="pointer-events:none;">&#9733;</span>' : ''}
+      <div class="item-chev"><span class="chev"></span></div>
+    </div>`;
+  }
+
+  function findCategory(title) {
+    for (const key of Object.keys(DATA)) {
+      if (DATA[key].items.includes(title)) return key;
+    }
+    return null;
+  }
+
+  function escapeReg(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+  function escapeHtml(s) { return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function openProtocol(encodedTitle, categoryKey) {
+    const title = decodeURIComponent(encodedTitle);
+    currentTitle = title;
+    document.getElementById("sheetTitle").textContent = title;
+    document.getElementById("sheetBody").innerHTML = CONTENT[title] || genericContent(title, categoryKey);
+    updateStar();
+    document.getElementById("modal").classList.add("open");
+    document.body.style.overflow = "hidden";
+    setTimeout(() => { document.getElementById("sheetBody").scrollTop = 0; }, 0);
+  }
+
+  function closeModal() {
+    document.getElementById("modal").classList.remove("open");
+    document.body.style.overflow = "";
+    currentTitle = null;
+  }
+
+  function toggleFav(e) {
+    e.stopPropagation();
+    if (!currentTitle) return;
+    if (favorites.has(currentTitle)) favorites.delete(currentTitle);
+    else favorites.add(currentTitle);
+    saveFavs();
+    updateStar();
+    render();
+  }
+
+  function updateStar() {
+    const star = document.getElementById("sheetStar");
+    if (currentTitle && favorites.has(currentTitle)) star.classList.add("active");
+    else star.classList.remove("active");
+  }
+
+  function detectPlatform() {
+    const ua = navigator.userAgent;
+    if (/iPhone|iPad|iPod/.test(ua)) return "ios";
+    if (/Android/.test(ua)) return "android";
+    return "desktop";
+  }
+
+  function showWelcome() {
+    const platform = detectPlatform();
+    const steps = document.getElementById("installSteps");
+    let html = "";
+    if (platform === "ios") {
+      html = `
+        <div class="install-step"><div class="step-num">1</div><div class="step-text">Make sure you're in <strong>Safari</strong> (not Chrome)</div></div>
+        <div class="install-step"><div class="step-num">2</div><div class="step-text">Tap the <strong>Share</strong> button at the bottom of the screen (box with arrow up)</div></div>
+        <div class="install-step"><div class="step-num">3</div><div class="step-text">Scroll down and tap <strong>"Add to Home Screen"</strong></div></div>
+        <div class="install-step"><div class="step-num">4</div><div class="step-text">Tap <strong>Add</strong> in the top-right corner</div></div>
+      `;
+    } else if (platform === "android") {
+      html = `
+        <div class="install-step"><div class="step-num">1</div><div class="step-text">Open this page in <strong>Chrome</strong></div></div>
+        <div class="install-step"><div class="step-num">2</div><div class="step-text">Tap the <strong>three-dot menu</strong> in the top-right corner</div></div>
+        <div class="install-step"><div class="step-num">3</div><div class="step-text">Tap <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong></div></div>
+        <div class="install-step"><div class="step-num">4</div><div class="step-text">Confirm by tapping <strong>Install</strong></div></div>
+      `;
+    } else {
+      html = `
+        <div class="install-step"><div class="step-num">1</div><div class="step-text">This tool is designed for mobile. Open the URL on your <strong>phone's browser</strong>.</div></div>
+        <div class="install-step"><div class="step-num">2</div><div class="step-text">Follow the "Add to Home Screen" prompt to install.</div></div>
+      `;
+    }
+    steps.innerHTML = html;
+    document.getElementById("welcome").classList.add("open");
+  }
+
+  function closeWelcome() {
+    document.getElementById("welcome").classList.remove("open");
+    localStorage.setItem("acfd_welcomed", "1");
+  }
+
+  function updateConn() {
+    const dot = document.getElementById("connDot");
+    const text = document.getElementById("connText");
+    if (navigator.onLine) {
+      dot.classList.remove("offline");
+      text.textContent = "Online";
+    } else {
+      dot.classList.add("offline");
+      text.textContent = "Offline";
+    }
+  }
+  window.addEventListener("online", updateConn);
+  window.addEventListener("offline", updateConn);
+
+  document.getElementById("search").addEventListener("input", e => {
+    currentQuery = e.target.value;
+    render();
+  });
+  document.getElementById("filters").addEventListener("click", e => {
+    if (!e.target.classList.contains("chip")) return;
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    e.target.classList.add("active");
+    currentFilter = e.target.dataset.filter;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { closeModal(); closeWelcome(); }
+  });
+
+  if ("serviceWorker" in navigator && location.protocol.startsWith("http")) {
+    const swCode = `
+      const CACHE = "acfd-v1";
+      self.addEventListener("install", e => {
+        e.waitUntil(caches.open(CACHE).then(c => c.addAll(["./"])));
+        self.skipWaiting();
+      });
+      self.addEventListener("activate", e => {
+        e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+        self.clients.claim();
+      });
+      self.addEventListener("fetch", e => {
+        if (e.request.method !== "GET") return;
+        e.respondWith(
+          caches.match(e.request).then(cached => {
+            const network = fetch(e.request).then(resp => {
+              const copy = resp.clone();
+              caches.open(CACHE).then(c => c.put(e.request, copy));
+              return resp;
+            }).catch(() => cached);
+            return cached || network;
+          })
+        );
+      });
+    `;
+    const blob = new Blob([swCode], { type: "application/javascript" });
+    const url = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(url).catch(() => {});
+  }
+
+  updateConn();
+  render();
+
+  if (!localStorage.getItem("acfd_welcomed")) {
+    setTimeout(showWelcome, 600);
+  }
+</script>
+
+</body>
+</html>
